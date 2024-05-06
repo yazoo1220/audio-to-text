@@ -16,7 +16,7 @@ AudioSegment.ffprobe = ffmpeg_path
 # OpenAIクライアントの初期化
 client = OpenAI()
 
-# AACファイルをMP3に変換する関数
+# 音声ファイルをMP3に変換する関数
 def convert_audio_to_mp3(audio_data, file_type):
     with st.spinner(f"{file_type.upper()}ファイルをMP3に変換中..."):
         audio = AudioSegment.from_file(BytesIO(audio_data), format=file_type)
@@ -58,6 +58,9 @@ if uploaded_file is not None:
 
     # 音声をMP3に変換（必要な場合）
     mp3_buffer = convert_audio_to_mp3(uploaded_file.read(), file_type)
+    
+    # MP3をテキストに変換
+    text = mp3_to_text(mp3_buffer)
     
     # テキストをマークダウンとして整形して表示
     if output_format == "テキスト":
