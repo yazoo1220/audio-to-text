@@ -4,6 +4,14 @@ from openai import OpenAI
 from docx import Document
 from io import BytesIO
 from pydub import AudioSegment
+import imageio_ffmpeg
+
+# imageio-ffmpegからffmpegの実行可能ファイルのパスを取得
+ffmpeg_path = imageio_ffmpeg.get_ffmpeg_exe()
+
+# pydubで使用するffmpegのパスを設定
+AudioSegment.converter = ffmpeg_path
+AudioSegment.ffprobe = ffmpeg_path
 
 # OpenAIクライアントの初期化
 client = OpenAI()
