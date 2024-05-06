@@ -2,4 +2,4 @@ streamlit
 openai
 python-docx
 pydub
-ffmpeg-python
+imageio-ffmpeg
