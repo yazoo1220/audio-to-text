@@ -9,13 +9,16 @@ from pydub import AudioSegment
 client = OpenAI()
 
 # AACファイルをMP3に変換する関数
-def convert_aac_to_mp3(audio_data):
-    with st.spinner("AACファイルをMP3に変換中..."):
-        audio = AudioSegment.from_file(BytesIO(audio_data), format=['aac', 'mp3', 'm4a'])
-        mp3_buffer = BytesIO()
-        audio.export(mp3_buffer, format="mp3")
-        mp3_buffer.seek(0)
-        return mp3_buffer
+def convert_audio_to_mp3(audio_data, file_type):
+    with st.spinner(f"{file_type.upper()}ファイルをMP3に変換中..."):
+        audio = AudioSegment.from_file(BytesIO(audio_data), format=file_type)
+        if file_type != "mp3":
+            mp3_buffer = BytesIO()
+            audio.export(mp3_buffer, format="mp3")
+            mp3_buffer.seek(0)
+            return mp3_buffer
+        else:
+            return BytesIO(audio_data)  # MP3の場合はそのまま利用
 
 # MP3ファイルをテキストに変換し、Docxまたはテキストとして出力する関数
 def mp3_to_text(mp3_buffer):
@@ -42,11 +45,11 @@ uploaded_file = st.file_uploader("音声ファイルをアップロードして�
 output_format = st.selectbox("出力フォーマットを選択", ["テキスト", "Docx"])
 
 if uploaded_file is not None:
-    # AACをMP3に変換
-    mp3_buffer = convert_aac_to_mp3(uploaded_file.read())
-    
-    # MP3をテキストに変換
-    text = mp3_to_text(mp3_buffer)
+    # アップロードされたファイルのMIMEタイプから正確なフォーマットを抽出
+    file_type = uploaded_file.type.split('/')[1]  # MIMEタイプから 'aac' を取得する
+
+    # 音声をMP3に変換（必要な場合）
+    mp3_buffer = convert_audio_to_mp3(uploaded_file.read(), file_type)
     
     # テキストをマークダウンとして整形して表示
     if output_format == "テキスト":
