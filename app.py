@@ -11,7 +11,7 @@ client = OpenAI()
 # AACファイルをMP3に変換する関数
 def convert_aac_to_mp3(audio_data):
     with st.spinner("AACファイルをMP3に変換中..."):
-        audio = AudioSegment.from_file(BytesIO(audio_data), format="aac")
+        audio = AudioSegment.from_file(BytesIO(audio_data), format=['aac', 'mp3', 'm4a'])
         mp3_buffer = BytesIO()
         audio.export(mp3_buffer, format="mp3")
         mp3_buffer.seek(0)
@@ -38,7 +38,7 @@ def create_docx(text):
 st.title("音声ファイルをテキストに変換")
 
 # ファイルアップロード
-uploaded_file = st.file_uploader("AACファイルをアップロードしてください", type=['aac'])
+uploaded_file = st.file_uploader("音声ファイルをアップロードしてください", type=['aac', 'mp3', 'm4a'])
 output_format = st.selectbox("出力フォーマットを選択", ["テキスト", "Docx"])
 
 if uploaded_file is not None:
